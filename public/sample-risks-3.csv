@@ -1,0 +1,6 @@
+id,area,description,cause,impact,L,I,owner,controls
+R30,Environment,Water consumption exceeds targets,Inefficient cooling systems,Increased operational costs,3,3,Facilities Manager,Water metering + leak detection + recycling system
+R31,OH&S,Chemical exposure in lab,Inadequate ventilation system,Health issues and absenteeism,4,4,Lab Supervisor,Upgraded fume hoods + PPE compliance + air quality monitoring
+R32,IMS,Audit findings not closed on time,Lack of tracking mechanism,Recurring non-conformities,5,4,Audit Coordinator,Automated tracking system + monthly reviews + escalation process
+R33,Quality,Supplier quality issues,Insufficient supplier audits,Production delays and rework,4,4,Procurement Lead,Supplier evaluation matrix + quarterly audits + performance reviews
+R34,Environment,Carbon footprint above benchmark,High energy consumption,Sustainability goals not met,3,4,Sustainability Manager,Energy audit + renewable sources + efficiency program

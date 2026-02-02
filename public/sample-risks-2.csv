@@ -1,0 +1,6 @@
+id,area,description,cause,impact,L,I,owner,controls
+R20,Quality,Product defect rate increase,Inadequate quality checks,Customer complaints and returns,4,5,QA Manager,Enhanced inspection protocol + statistical sampling
+R21,Environment,Hazardous waste mishandling,Insufficient training on disposal,Regulatory penalties and contamination,5,4,HSE Coordinator,Monthly training + waste segregation audit + signage
+R22,OH&S,Fire safety equipment failure,Lack of regular maintenance,Risk of injuries and property damage,3,5,Safety Officer,Quarterly inspections + alarm testing + evacuation drills
+R23,Quality,Data entry errors in system,Manual data input process,Incorrect reporting and decisions,4,3,IT Manager,Automated data validation + double-check process
+R24,IMS,Policy updates not communicated,Decentralized communication channels,Non-compliance with latest standards,5,3,Compliance Officer,Centralized portal + monthly newsletters + training sessions
