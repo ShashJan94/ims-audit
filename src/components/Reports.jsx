@@ -184,16 +184,141 @@ export default function Reports({ risks, findings, auditPlan, kpis }) {
     URL.revokeObjectURL(url);
   };
 
+  const downloadCSV = () => {
+    // Combine all risks data into CSV format
+    const headers = ['ID', 'Area', 'Description', 'Cause', 'Impact', 'Likelihood', 'Impact Score', 'Risk Score', 'Owner', 'Controls'];
+    const rows = risks.map(r => [
+      r.id,
+      r.area,
+      `"${r.description}"`,
+      `"${r.cause}"`,
+      `"${r.impact}"`,
+      r.L,
+      r.I,
+      Number(r.L) * Number(r.I),
+      r.owner,
+      `"${r.controls}"`
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ims-risks-export-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadChartImage = (chartId, chartName) => {
+    const canvas = document.querySelector(`#${chartId} canvas`);
+    if (!canvas) return;
+
+    canvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${chartName}-${new Date().toISOString().split('T')[0]}.png`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  };
+
+  const downloadAllCharts = () => {
+    ['risk-distribution', 'risk-by-area', 'findings-distribution', 'findings-status'].forEach((chartId, idx) => {
+      setTimeout(() => {
+        const canvas = document.querySelector(`#${chartId} canvas`);
+        if (canvas) {
+          canvas.toBlob((blob) => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `chart-${chartId}-${new Date().toISOString().split('T')[0]}.png`;
+            a.click();
+            URL.revokeObjectURL(url);
+          });
+        }
+      }, idx * 300);
+    });
+  };
+
+  const downloadPrintable = () => {
+    const reportContent = `
+IMS AUDIT MANAGEMENT SYSTEM - COMPREHENSIVE REPORT
+Generated: ${new Date().toLocaleString()}
+============================================================
+
+EXECUTIVE SUMMARY
+-----------------
+Total Risks: ${riskStats.total} (${riskStats.high} High, ${riskStats.medium} Medium, ${riskStats.low} Low)
+Total Findings: ${findingStats.total} (${findingStats.open} Open, ${findingStats.inProgress} In Progress, ${findingStats.closed} Closed)
+Scheduled Audits: ${auditPlan.length}
+KPI Performance: ${kpiStats.avgPerformance}% (${kpiStats.onTarget}/${kpiStats.total} targets met)
+
+RISK DETAILS
+------------
+${risks.map((r, i) => `
+${i + 1}. [${r.area}] ${r.description}
+   Risk Score: ${Number(r.L) * Number(r.I)} (L:${r.L} × I:${r.I})
+   Owner: ${r.owner}
+   Controls: ${r.controls}
+`).join('')}
+
+FINDINGS DETAILS
+----------------
+${findings.map((f, i) => `
+${i + 1}. [${f.type}] ${f.description}
+   Status: ${f.status}
+   Responsible: ${f.responsible}
+   ${f.action ? `Action: ${f.action}` : ''}
+`).join('')}
+
+AUDIT PLAN
+----------
+${auditPlan.map((a, i) => `
+${i + 1}. ${a.area} - ${a.date}
+   Auditor: ${a.auditor}
+   Scope: ${a.scope}
+`).join('')}
+
+============================================================
+End of Report
+    `.trim();
+
+    const blob = new Blob([reportContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ims-audit-full-report-${new Date().toISOString().split('T')[0]}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="card">
-      <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
+      <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px", flexWrap:"wrap", gap:"12px"}}>
         <div>
           <h2 className="h1">Comprehensive Audit Reports & Analytics</h2>
           <p className="muted">Detailed analysis of risks, findings, KPIs, and audit performance across all management systems.</p>
         </div>
-        <button className="btn" onClick={downloadReport}>
-          Download Full Report
-        </button>
+        <div style={{display:"flex", gap:"10px", flexWrap:"wrap"}}>
+          <button className="btn" onClick={downloadReport} style={{background:"linear-gradient(135deg, #2563eb 0%, #1e40af 100%)", color:"white", padding:"10px 20px", borderRadius:"8px", border:"none", cursor:"pointer", fontWeight:"600", fontSize:"13px", boxShadow:"0 2px 8px rgba(37, 99, 235, 0.3)"}}>
+            📊 JSON Report
+          </button>
+          <button className="btn" onClick={downloadCSV} style={{background:"linear-gradient(135deg, #10b981 0%, #059669 100%)", color:"white", padding:"10px 20px", borderRadius:"8px", border:"none", cursor:"pointer", fontWeight:"600", fontSize:"13px", boxShadow:"0 2px 8px rgba(16, 185, 129, 0.3)"}}>
+            📑 CSV Export
+          </button>
+          <button className="btn" onClick={downloadPrintable} style={{background:"linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)", color:"white", padding:"10px 20px", borderRadius:"8px", border:"none", cursor:"pointer", fontWeight:"600", fontSize:"13px", boxShadow:"0 2px 8px rgba(139, 92, 246, 0.3)"}}>
+            📄 Text Report
+          </button>
+          <button className="btn" onClick={downloadAllCharts} style={{background:"linear-gradient(135deg, #f59e0b 0%, #d97706 100%)", color:"white", padding:"10px 20px", borderRadius:"8px", border:"none", cursor:"pointer", fontWeight:"600", fontSize:"13px", boxShadow:"0 2px 8px rgba(245, 158, 11, 0.3)"}}>
+            📈 All Charts
+          </button>
+        </div>
       </div>
 
       <hr style={{margin:"20px 0"}} />
@@ -245,36 +370,72 @@ export default function Reports({ risks, findings, auditPlan, kpis }) {
       {/* Charts Grid */}
       <h3 style={{margin:"0 0 16px", fontSize:"16px", fontWeight:"600", color:"#1e3a5f"}}>Visual Analytics</h3>
       <div style={{display:"grid", gridTemplateColumns:"repeat(2, 1fr)", gap:"24px", marginBottom:"32px"}}>
-        <div className="card" style={{padding:"24px"}}>
-          <h4 style={{margin:"0 0 16px", fontSize:"14px", fontWeight:"600", color:"#1e3a5f", textAlign:"center"}}>
-            Risk Distribution by Severity
-          </h4>
-          <div style={{maxWidth:"320px", margin:"0 auto"}}>
+        <div className="card" style={{padding:"24px", position:"relative"}}>
+          <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
+            <h4 style={{margin:"0", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>
+              Risk Distribution by Severity
+            </h4>
+            <button 
+              onClick={() => downloadChartImage('risk-distribution', 'risk-distribution')}
+              style={{background:"transparent", border:"1px solid #2563eb", color:"#2563eb", padding:"6px 12px", borderRadius:"6px", cursor:"pointer", fontSize:"11px", fontWeight:"600"}}
+            >
+              💾 Save
+            </button>
+          </div>
+          <div id="risk-distribution" style={{maxWidth:"320px", margin:"0 auto"}}>
             <Pie data={riskDistributionData} options={chartOptions} />
           </div>
         </div>
 
-        <div className="card" style={{padding:"24px"}}>
-          <h4 style={{margin:"0 0 16px", fontSize:"14px", fontWeight:"600", color:"#1e3a5f", textAlign:"center"}}>
-            Risks by Management System Area
-          </h4>
-          <Bar data={riskByAreaData} options={barChartOptions} />
+        <div className="card" style={{padding:"24px", position:"relative"}}>
+          <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
+            <h4 style={{margin:"0", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>
+              Risks by Management System Area
+            </h4>
+            <button 
+              onClick={() => downloadChartImage('risk-by-area', 'risk-by-area')}
+              style={{background:"transparent", border:"1px solid #2563eb", color:"#2563eb", padding:"6px 12px", borderRadius:"6px", cursor:"pointer", fontSize:"11px", fontWeight:"600"}}
+            >
+              💾 Save
+            </button>
+          </div>
+          <div id="risk-by-area">
+            <Bar data={riskByAreaData} options={barChartOptions} />
+          </div>
         </div>
 
-        <div className="card" style={{padding:"24px"}}>
-          <h4 style={{margin:"0 0 16px", fontSize:"14px", fontWeight:"600", color:"#1e3a5f", textAlign:"center"}}>
-            Findings Distribution by Type
-          </h4>
-          <div style={{maxWidth:"320px", margin:"0 auto"}}>
+        <div className="card" style={{padding:"24px", position:"relative"}}>
+          <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
+            <h4 style={{margin:"0", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>
+              Findings Distribution by Type
+            </h4>
+            <button 
+              onClick={() => downloadChartImage('findings-distribution', 'findings-distribution')}
+              style={{background:"transparent", border:"1px solid #2563eb", color:"#2563eb", padding:"6px 12px", borderRadius:"6px", cursor:"pointer", fontSize:"11px", fontWeight:"600"}}
+            >
+              💾 Save
+            </button>
+          </div>
+          <div id="findings-distribution" style={{maxWidth:"320px", margin:"0 auto"}}>
             <Doughnut data={findingsDistributionData} options={chartOptions} />
           </div>
         </div>
 
-        <div className="card" style={{padding:"24px"}}>
-          <h4 style={{margin:"0 0 16px", fontSize:"14px", fontWeight:"600", color:"#1e3a5f", textAlign:"center"}}>
-            Findings Status Tracking
-          </h4>
-          <Bar data={findingsStatusData} options={barChartOptions} />
+        <div className="card" style={{padding:"24px", position:"relative"}}>
+          <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
+            <h4 style={{margin:"0", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>
+              Findings Status Tracking
+            </h4>
+            <button 
+              onClick={() => downloadChartImage('findings-status', 'findings-status')}
+              style={{background:"transparent", border:"1px solid #2563eb", color:"#2563eb", padding:"6px 12px", borderRadius:"6px", cursor:"pointer", fontSize:"11px", fontWeight:"600"}}
+            >
+              💾 Save
+            </button>
+          </div>
+          <div id="findings-status">
+            <Bar data={findingsStatusData} options={barChartOptions} />
+          </div>
         </div>
       </div>
 

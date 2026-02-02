@@ -81,14 +81,20 @@ export default function App() {
               Organization: <b>{sample.meta.orgName}</b> • Standards: <b>{sample.meta.standards.join(", ")}</b>
             </div>
             <div style={{marginTop:10}} className="row">
-              <div className="card" style={{boxShadow:"none", background:"#f3f5ff"}}>
-                <b>High risks</b><div className="muted">{highRiskCount}</div>
+              <div className="card" style={{boxShadow:"none", background:"linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)", borderLeft:"3px solid #2563eb"}}>
+                <b style={{fontSize:"14px", color:"#1e3a5f"}}>Total Risks</b>
+                <div style={{fontSize:"24px", fontWeight:"700", color:"#2563eb", marginTop:"4px"}}>{risks.length}</div>
+                <div className="muted" style={{fontSize:"11px", marginTop:"2px"}}>{highRiskCount} High Priority</div>
               </div>
-              <div className="card" style={{boxShadow:"none", background:"#f3f5ff"}}>
-                <b>Open findings</b><div className="muted">{openFindings}</div>
+              <div className="card" style={{boxShadow:"none", background:"linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)", borderLeft:"3px solid #f59e0b"}}>
+                <b style={{fontSize:"14px", color:"#1e3a5f"}}>Total Findings</b>
+                <div style={{fontSize:"24px", fontWeight:"700", color:"#f59e0b", marginTop:"4px"}}>{findings.length}</div>
+                <div className="muted" style={{fontSize:"11px", marginTop:"2px"}}>{openFindings} Open</div>
               </div>
-              <div className="card" style={{boxShadow:"none", background:"#f3f5ff"}}>
-                <b>Demo goal</b><div className="muted">Show risk-based audit + KPI + PDCA</div>
+              <div className="card" style={{boxShadow:"none", background:"linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)", borderLeft:"3px solid #10b981"}}>
+                <b style={{fontSize:"14px", color:"#1e3a5f"}}>Live Updates</b>
+                <div style={{fontSize:"24px", fontWeight:"700", color:"#10b981", marginTop:"4px"}}>✓</div>
+                <div className="muted" style={{fontSize:"11px", marginTop:"2px"}}>All tabs sync instantly</div>
               </div>
             </div>
           </div>

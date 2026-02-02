@@ -4,6 +4,7 @@ const scoreColor = (s) => (s >= 13 ? "nc" : s >= 7 ? "obs" : "ok");
 
 export default function RiskRegister({ risks, setRisks }) {
   const [filter, setFilter] = useState("All");
+  const [uploadMessage, setUploadMessage] = useState("");
   const [form, setForm] = useState({
     id: "", area: "Quality", description: "", cause: "", impact: "",
     L: 3, I: 3, owner: "", controls: ""
@@ -27,25 +28,80 @@ export default function RiskRegister({ risks, setRisks }) {
     const file = e.target.files[0];
     if (!file) return;
     
+    setUploadMessage("⏳ Processing CSV file...");
+    
     const reader = new FileReader();
     reader.onload = (event) => {
-      const text = event.target.result;
-      const lines = text.split('\n').filter(line => line.trim());
-      const headers = lines[0].split(',').map(h => h.trim());
-      
-      const newRisks = lines.slice(1).map(line => {
-        const values = line.split(',').map(v => v.trim());
-        const risk = {};
-        headers.forEach((header, index) => {
-          risk[header] = values[index];
-        });
-        risk.L = Number(risk.L);
-        risk.I = Number(risk.I);
-        return risk;
-      });
-      
-      setRisks(prev => [...prev, ...newRisks]);
+      try {
+        const text = event.target.result;
+        const lines = text.split('\n').filter(line => line.trim());
+        
+        if (lines.length < 2) {
+          setUploadMessage("❌ Error: CSV file is empty or invalid");
+          setTimeout(() => setUploadMessage(""), 4000);
+          return;
+        }
+        
+        // Parse CSV properly handling quoted fields
+        const parseCSVLine = (line) => {
+          const result = [];
+          let current = '';
+          let inQuotes = false;
+          
+          for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            
+            if (char === '"') {
+              inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+              result.push(current.trim().replace(/^"|"$/g, ''));
+              current = '';
+            } else {
+              current += char;
+            }
+          }
+          result.push(current.trim().replace(/^"|"$/g, ''));
+          return result;
+        };
+        
+        const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
+        
+        const newRisks = lines.slice(1).map(line => {
+          const values = parseCSVLine(line);
+          const risk = {};
+          
+          headers.forEach((header, index) => {
+            risk[header] = values[index] || '';
+          });
+          
+          risk.L = Number(risk.l) || Number(risk.L) || 3;
+          risk.I = Number(risk.i) || Number(risk.I) || 3;
+          delete risk.l;
+          delete risk.i;
+          
+          return risk;
+        }).filter(risk => risk.id && risk.description); // Only add valid risks
+        
+        if (newRisks.length === 0) {
+          setUploadMessage("❌ No valid risks found in CSV file");
+          setTimeout(() => setUploadMessage(""), 4000);
+          return;
+        }
+        
+        setRisks(prev => [...prev, ...newRisks]);
+        setUploadMessage(`✅ Successfully imported ${newRisks.length} risk(s)! Updated: Overview, Risks, Reports tabs.`);
+        setTimeout(() => setUploadMessage(""), 5000);
+      } catch (error) {
+        setUploadMessage(`❌ Error parsing CSV: ${error.message}`);
+        setTimeout(() => setUploadMessage(""), 5000);
+      }
     };
+    
+    reader.onerror = () => {
+      setUploadMessage("❌ Error reading file");
+      setTimeout(() => setUploadMessage(""), 4000);
+    };
+    
     reader.readAsText(file);
     e.target.value = ''; // Reset file input
   };
@@ -66,6 +122,22 @@ R99,Quality,Sample Risk,Sample cause,Sample impact,3,3,Owner Name,Sample control
     <div className="card">
       <h2 className="h1">Risk Register</h2>
       <p className="muted">Identify and assess audit risks. Score = Likelihood (L) × Impact (I). Thresholds: 1–6 Low, 7–12 Medium, 13–25 High.</p>
+
+      <div className="card" style={{background:"linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)", borderLeft:"4px solid #0284c7", marginTop:"16px", marginBottom:"16px", padding:"16px"}}>
+        <h3 style={{margin:"0 0 8px", fontSize:"14px", fontWeight:"700", color:"#0c4a6e"}}>
+          🔄 Real-Time Synchronization
+        </h3>
+        <p style={{margin:"0", fontSize:"13px", color:"#0c4a6e", lineHeight:"1.6"}}>
+          When you add or import risks here, the following sections update automatically:
+        </p>
+        <ul style={{margin:"8px 0 0", paddingLeft:"20px", fontSize:"12px", color:"#0c4a6e"}}>
+          <li><strong>Overview Tab:</strong> Total Risks & High Priority count in widgets</li>
+          <li><strong>Top Summary Bar:</strong> Total Risks counter updates instantly</li>
+          <li><strong>Reports Tab:</strong> All charts (Pie, Bar, Doughnut) recalculate with new data</li>
+          <li><strong>This Table Below:</strong> Shows all current risks with scores</li>
+          <li><strong>LocalStorage:</strong> Data persists across browser sessions</li>
+        </ul>
+      </div>
 
       <hr />
 
@@ -90,6 +162,27 @@ R99,Quality,Sample Risk,Sample cause,Sample impact,3,3,Owner Name,Sample control
         <p className="muted" style={{marginBottom:"16px", fontSize:"13px"}}>
           Upload a CSV file to bulk import risks. Download the sample template to see the required format.
         </p>
+        
+        {uploadMessage && (
+          <div style={{
+            padding:"12px 16px", 
+            marginBottom:"16px", 
+            borderRadius:"8px", 
+            background: uploadMessage.includes("✅") ? "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)" : 
+                       uploadMessage.includes("⏳") ? "linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)" :
+                       "linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)",
+            border: uploadMessage.includes("✅") ? "2px solid #10b981" : 
+                   uploadMessage.includes("⏳") ? "2px solid #f59e0b" :
+                   "2px solid #dc2626",
+            fontWeight:"600",
+            fontSize:"13px",
+            color:"#1e3a5f",
+            animation:"slideIn 0.3s ease-out"
+          }}>
+            {uploadMessage}
+          </div>
+        )}
+        
         <div style={{display:"flex", gap:"12px", alignItems:"center"}}>
           <input 
             type="file" 
