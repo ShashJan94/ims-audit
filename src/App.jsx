@@ -117,7 +117,7 @@ export default function App() {
   const openFindings = useMemo(() => findings.filter(f => f.status !== "Closed").length, [findings]);
 
   return (
-    <div>
+    <>
       <div className="app-header">
         <h1>IMS Audit Management System</h1>
         <p>Integrated Quality, Environmental & Safety Management | Risk-Based Internal Audits</p>
@@ -126,7 +126,7 @@ export default function App() {
       <div className="app-content">
         <div className="container">
           <div className="card">
-            <h1 className="h1">IMS Audit & Performance Evaluation — Demo UI</h1>
+            <h1 className="h1">IMS Audit & Performance Evaluation</h1>
             <div className="muted">
               Organization: <b>{sample.meta.orgName}</b> • Standards: <b>{sample.meta.standards.join(", ")}</b>
             </div>
@@ -334,6 +334,6 @@ export default function App() {
           {tab === "Export" && <ExportJson state={{ risks, findings, roadmap, kpis }} />}
         </div>
       </div>
-    </div>
+    </>
   );
 }
