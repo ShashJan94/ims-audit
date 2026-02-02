@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import "./App.css";
 import Tabs from "./components/Tabs";
 import MermaidDiagram from "./components/MermaidDiagram";
 import RiskRegister from "./components/RiskRegister";
