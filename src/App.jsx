@@ -99,7 +99,12 @@ export default function App() {
             <div>
               {/* Metrics Widgets */}
               <div style={{display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:"16px", marginBottom:"24px"}}>
-                <div className="card" style={{background:"linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)", borderLeft:"5px solid #2563eb", padding:"20px", textAlign:"center"}}>
+                <div 
+                  className="card metric-widget" 
+                  style={{background:"linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)", borderLeft:"5px solid #2563eb", padding:"20px", textAlign:"center", cursor:"pointer"}}
+                  onClick={() => setTab("Risks")}
+                  title="Click to view Risk Register"
+                >
                   <div style={{fontSize:"32px", fontWeight:"700", color:"#2563eb", marginBottom:"8px"}}>
                     {risks.length}
                   </div>
@@ -111,7 +116,12 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="card" style={{background:"linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)", borderLeft:"5px solid #f59e0b", padding:"20px", textAlign:"center"}}>
+                <div 
+                  className="card metric-widget" 
+                  style={{background:"linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)", borderLeft:"5px solid #f59e0b", padding:"20px", textAlign:"center", cursor:"pointer"}}
+                  onClick={() => setTab("Findings")}
+                  title="Click to view Findings"
+                >
                   <div style={{fontSize:"32px", fontWeight:"700", color:"#f59e0b", marginBottom:"8px"}}>
                     {findings.length}
                   </div>
@@ -123,7 +133,12 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="card" style={{background:"linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)", borderLeft:"5px solid #10b981", padding:"20px", textAlign:"center"}}>
+                <div 
+                  className="card metric-widget" 
+                  style={{background:"linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)", borderLeft:"5px solid #10b981", padding:"20px", textAlign:"center", cursor:"pointer"}}
+                  onClick={() => setTab("Audit Plan")}
+                  title="Click to view Audit Plan"
+                >
                   <div style={{fontSize:"32px", fontWeight:"700", color:"#10b981", marginBottom:"8px"}}>
                     {sample.auditPlan.length}
                   </div>
@@ -135,7 +150,12 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="card" style={{background:"linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)", borderLeft:"5px solid #8b5cf6", padding:"20px", textAlign:"center"}}>
+                <div 
+                  className="card metric-widget" 
+                  style={{background:"linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)", borderLeft:"5px solid #8b5cf6", padding:"20px", textAlign:"center", cursor:"pointer"}}
+                  onClick={() => setTab("KPIs")}
+                  title="Click to view KPI Dashboard"
+                >
                   <div style={{fontSize:"32px", fontWeight:"700", color:"#8b5cf6", marginBottom:"8px"}}>
                     {sample.kpis.length}
                   </div>
