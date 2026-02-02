@@ -502,7 +502,7 @@ End of Report
       <div className="card" style={{padding:"20px", marginBottom:"20px"}}>
         <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
           <h4 style={{margin:"0", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>
-            🔴 High Priority Risks (Score ≥ 13)
+            High Priority Risks (Score ≥ 13)
           </h4>
           <span style={{fontSize:"12px", color:"#6b7280"}}>
             {risks.filter(r => Number(r.L) * Number(r.I) >= 13).length} Critical Items
@@ -567,7 +567,7 @@ End of Report
       <div className="card" style={{padding:"20px", marginBottom:"20px"}}>
         <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
           <h4 style={{margin:"0", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>
-            📊 Risk Distribution by Management System Area
+            Risk Distribution by Management System Area
           </h4>
         </div>
         <table style={{fontSize:"12px"}}>

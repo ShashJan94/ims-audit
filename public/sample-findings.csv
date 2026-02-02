@@ -1,0 +1,6 @@
+id,type,standard,description,area,riskLink,action,status,responsible,dueDate
+F10,NC,ISO 9001,Missing documented procedures for ticket escalation,Quality,R2,Create and approve escalation SOP,Open,QA Manager,2026-03-15
+F11,OBS,ISO 14001,Energy monitoring logs incomplete for Q4 2025,Environment,R3,Complete missing logs and set reminders,In Progress,EMS Coordinator,2026-02-28
+F12,OFI,ISO 45001,Ergonomic assessment forms could be digitized,OH&S,R5,Implement digital form system,Planned,HR Manager,2026-04-30
+F13,NC,ISO 9001,Calibration certificates expired for 2 measurement devices,Quality,-,Recalibrate devices and update records,Open,Lab Technician,2026-02-15
+F14,OBS,IMS,Version control issues in document repository,IMS,R7,Implement automated version control,In Progress,IMS Manager,2026-03-30

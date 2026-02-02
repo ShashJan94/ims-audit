@@ -149,6 +149,41 @@ export default function App() {
             </div>
           </div>
 
+          <div className="card" style={{background:"linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)", borderLeft:"4px solid #f59e0b", padding:"20px", marginBottom:"20px"}}>
+            <h3 style={{margin:"0 0 12px", fontSize:"15px", fontWeight:"700", color:"#78350f"}}>
+              📊 Real-Time Data Updates — What's Live
+            </h3>
+            <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:"20px"}}>
+              <div>
+                <div style={{fontSize:"13px", fontWeight:"600", color:"#78350f", marginBottom:"8px"}}>
+                  🔴 When You Upload RISKS (CSV):
+                </div>
+                <ul style={{margin:"0", paddingLeft:"20px", fontSize:"12px", color:"#78350f", lineHeight:"1.8"}}>
+                  <li><strong>Overview:</strong> Total Risks & High Priority counts</li>
+                  <li><strong>Risks Tab:</strong> Table updates with new rows</li>
+                  <li><strong>KPIs Tab:</strong> 4 metrics recalculate (Mitigation Rate, Total, High Count, Compliance)</li>
+                  <li><strong>Reports Tab:</strong> All 4 charts + 4 presentation tables</li>
+                  <li><strong>Roadmap:</strong> High Priority Risks section</li>
+                </ul>
+              </div>
+              <div>
+                <div style={{fontSize:"13px", fontWeight:"600", color:"#78350f", marginBottom:"8px"}}>
+                  🟡 When You Upload FINDINGS (CSV):
+                </div>
+                <ul style={{margin:"0", paddingLeft:"20px", fontSize:"12px", color:"#78350f", lineHeight:"1.8"}}>
+                  <li><strong>Overview:</strong> Total Findings & Open counts</li>
+                  <li><strong>Findings Tab:</strong> Table updates with new rows</li>
+                  <li><strong>KPIs Tab:</strong> Finding Closure Rate recalculates</li>
+                  <li><strong>Reports Tab:</strong> Findings charts + Findings Tracking table</li>
+                  <li><strong>Roadmap:</strong> Open Findings section</li>
+                </ul>
+              </div>
+            </div>
+            <div style={{marginTop:"16px", padding:"12px", background:"rgba(255,255,255,0.7)", borderRadius:"8px", fontSize:"12px", color:"#78350f"}}>
+              <strong>💡 Test It:</strong> Upload sample-risks-2.csv in Risks tab, then sample-findings.csv in Findings tab. Watch all tabs update instantly!
+            </div>
+          </div>
+
           <Tabs tabs={TABS} active={tab} onChange={setTab} />
 
           {tab === "Overview" && (
