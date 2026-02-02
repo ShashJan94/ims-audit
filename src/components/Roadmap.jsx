@@ -5,8 +5,8 @@ export default function Roadmap({ roadmap, setRoadmap }) {
 
   return (
     <div className="card">
-      <h2 className="h1">Continuous Improvement Roadmap (PDCA)</h2>
-      <p className="muted">Actions linked to findings/risks with owners, timeline, and success metrics.</p>
+      <h2 className="h1">🛣️ Continuous Improvement Roadmap (PDCA)</h2>
+      <p className="muted">Strategic actions linked to findings and risks. Track owners, timelines, success metrics, and progress status.</p>
 
       <table>
         <thead>

@@ -25,8 +25,56 @@ export default function RiskRegister({ risks, setRisks }) {
 
   return (
     <div className="card">
-      <h2 className="h1">Risk Register</h2>
-      <p className="muted">Score = Likelihood (L) × Impact (I). Thresholds: 1–6 Low, 7–12 Medium, 13–25 High.</p>
+      <h2 className="h1">⚠️ Risk Register</h2>
+      <p className="muted">Identify and assess audit risks. Score = Likelihood (L) × Impact (I). Thresholds: 1–6 Low, 7–12 Medium, 13–25 High.</p>
+
+      <hr />
+
+      <h3 style={{margin:"16px 0 12px", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>📊 Risk Assessment Scale</h3>
+      <div style={{display:"grid", gridTemplateColumns:"repeat(2, 1fr)", gap:"12px", marginBottom:"20px"}}>
+        <div className="card" style={{boxShadow:"0 2px 12px rgba(0,0,0,0.06)", borderLeft:"4px solid #3b82f6"}}>
+          <b>Likelihood (L): 1–5 Scale</b>
+          <div className="muted" style={{fontSize:"12px", marginTop:"6px", lineHeight:"1.5"}}>
+            1 = Very unlikely<br/>2 = Unlikely<br/>3 = Possible<br/>4 = Likely<br/>5 = Very likely
+          </div>
+        </div>
+        <div className="card" style={{boxShadow:"0 2px 12px rgba(0,0,0,0.06)", borderLeft:"4px solid #d32f2f"}}>
+          <b>Impact (I): 1–5 Scale</b>
+          <div className="muted" style={{fontSize:"12px", marginTop:"6px", lineHeight:"1.5"}}>
+            1 = Minimal harm<br/>2 = Minor issues<br/>3 = Moderate effect<br/>4 = Major consequence<br/>5 = Severe impact
+          </div>
+        </div>
+      </div>
+
+      <h3 style={{margin:"16px 0 12px", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>🎯 Current Assessed Risks</h3>
+      <table style={{marginBottom:"24px"}}>
+        <thead>
+          <tr>
+            <th style={{width:"8%"}}>Risk ID</th>
+            <th style={{width:"20%"}}>Risk Description</th>
+            <th style={{width:"16%"}}>Area</th>
+            <th style={{width:"10%"}}>L</th>
+            <th style={{width:"10%"}}>I</th>
+            <th style={{width:"12%"}}>Score</th>
+            <th style={{width:"14%"}}>Risk Level</th>
+          </tr>
+        </thead>
+        <tbody>
+          {computed.slice(0, 7).map(r => (
+            <tr key={r.id}>
+              <td><b>{r.id}</b></td>
+              <td><div className="small">{r.description}</div></td>
+              <td>{r.area}</td>
+              <td style={{textAlign:"center", fontWeight:"600"}}>{r.L}</td>
+              <td style={{textAlign:"center", fontWeight:"600"}}>{r.I}</td>
+              <td style={{textAlign:"center"}}><span className={`badge ${scoreColor(r.score)}`}><b>{r.score}</b></span></td>
+              <td style={{fontSize:"12px"}}>
+                {r.score >= 13 ? "🔴 High" : r.score >= 7 ? "🟡 Medium" : "🟢 Low"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
       <div className="row">
         <div>

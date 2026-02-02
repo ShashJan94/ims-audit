@@ -11,11 +11,11 @@ export default function ExportJson({ state }) {
 
   return (
     <div className="card">
-      <h2 className="h1">Export Demo Data</h2>
+      <h2 className="h1">📤 Export Audit Data</h2>
       <p className="muted">
-        Optional: export current state to JSON (evidence you can attach as appendix).
+        Export all audit data as JSON. Perfect for reporting, archiving, or integration with external systems.
       </p>
-      <button className="btn" onClick={download}>Download JSON</button>
+      <button className="btn" onClick={download}>⬇️ Download JSON Export</button>
     </div>
   );
 }

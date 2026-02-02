@@ -13,7 +13,8 @@ export default function Findings({ findings, setFindings }) {
 
   return (
     <div className="card">
-      <h2 className="h1">Audit Findings & Actions</h2>
+      <h2 className="h1">📋 Audit Findings & Corrective Actions</h2>
+      <p className="muted">Document and track audit findings: NC (Non-Conformity), OBS (Observation), OFI (Opportunity for Improvement). Monitor corrective action status.</p>
       <div className="row">
         <div>
           <label className="small">Filter by Status</label>
