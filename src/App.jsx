@@ -46,6 +46,7 @@ export default function App() {
   const [risks, setRisks] = useState(sample.risks);
   const [findings, setFindings] = useState(sample.findings);
   const [roadmap, setRoadmap] = useState(sample.roadmap);
+  const [kpis, setKpis] = useState(sample.kpis);
 
   // Load/save from localStorage (so your demo changes persist)
   useEffect(() => {
@@ -56,12 +57,61 @@ export default function App() {
       if (parsed?.risks) setRisks(parsed.risks);
       if (parsed?.findings) setFindings(parsed.findings);
       if (parsed?.roadmap) setRoadmap(parsed.roadmap);
+      if (parsed?.kpis) setKpis(parsed.kpis);
     } catch {}
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(LS_KEY, JSON.stringify({ risks, findings, roadmap }));
-  }, [risks, findings, roadmap]);
+    localStorage.setItem(LS_KEY, JSON.stringify({ risks, findings, roadmap, kpis }));
+  }, [risks, findings, roadmap, kpis]);
+
+  // Auto-generate KPIs based on risks and findings
+  useEffect(() => {
+    const highRisks = risks.filter(r => Number(r.L) * Number(r.I) >= 13).length;
+    const totalRisks = risks.length;
+    const openFindings = findings.filter(f => f.status !== "Closed").length;
+    const closedFindings = findings.filter(f => f.status === "Closed").length;
+    const totalFindings = findings.length;
+    
+    setKpis([
+      {
+        name: "Risk Mitigation Rate",
+        value: totalRisks > 0 ? Math.round(((totalRisks - highRisks) / totalRisks) * 100) : 100,
+        target: 85,
+        unit: "%"
+      },
+      {
+        name: "Finding Closure Rate",
+        value: totalFindings > 0 ? Math.round((closedFindings / totalFindings) * 100) : 0,
+        target: 90,
+        unit: "%"
+      },
+      {
+        name: "Total Risks Identified",
+        value: totalRisks,
+        target: 20,
+        unit: ""
+      },
+      {
+        name: "High Risk Count",
+        value: highRisks,
+        target: 5,
+        unit: ""
+      },
+      {
+        name: "Open Findings",
+        value: openFindings,
+        target: 3,
+        unit: ""
+      },
+      {
+        name: "Audit Compliance",
+        value: 94,
+        target: 95,
+        unit: "%"
+      }
+    ]);
+  }, [risks, findings]);
 
   const highRiskCount = useMemo(() => risks.filter(r => Number(r.L) * Number(r.I) >= 13).length, [risks]);
   const openFindings = useMemo(() => findings.filter(f => f.status !== "Closed").length, [findings]);
@@ -163,13 +213,13 @@ export default function App() {
                   title="Click to view KPI Dashboard"
                 >
                   <div style={{fontSize:"32px", fontWeight:"700", color:"#8b5cf6", marginBottom:"8px"}}>
-                    {sample.kpis.length}
+                    {kpis.length}
                   </div>
                   <div style={{fontSize:"13px", color:"#1e3a5f", fontWeight:"600", marginBottom:"4px"}}>
                     Active KPIs
                   </div>
                   <div style={{fontSize:"11px", color:"#1e3a5f"}}>
-                    Performance metrics
+                    Auto-updating metrics
                   </div>
                 </div>
               </div>
@@ -243,10 +293,10 @@ export default function App() {
           {tab === "Risks" && <RiskRegister risks={risks} setRisks={setRisks} />}
           {tab === "Audit Plan" && <AuditPlan auditPlan={sample.auditPlan} />}
           {tab === "Findings" && <Findings findings={findings} setFindings={setFindings} />}
-          {tab === "KPIs" && <KpiDashboard kpis={sample.kpis} />}
-          {tab === "Reports" && <Reports risks={risks} findings={findings} auditPlan={sample.auditPlan} kpis={sample.kpis} />}
-          {tab === "Roadmap" && <Roadmap roadmap={roadmap} setRoadmap={setRoadmap} />}
-          {tab === "Export" && <ExportJson state={{ risks, findings, roadmap }} />}
+          {tab === "KPIs" && <KpiDashboard kpis={kpis} risks={risks} findings={findings} />}
+          {tab === "Reports" && <Reports risks={risks} findings={findings} auditPlan={sample.auditPlan} kpis={kpis} />}
+          {tab === "Roadmap" && <Roadmap roadmap={roadmap} setRoadmap={setRoadmap} risks={risks} findings={findings} />}
+          {tab === "Export" && <ExportJson state={{ risks, findings, roadmap, kpis }} />}
         </div>
       </div>
     </div>

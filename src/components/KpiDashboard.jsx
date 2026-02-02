@@ -5,10 +5,14 @@ import { Bar } from "react-chartjs-2";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend);
 
-export default function KpiDashboard({ kpis }) {
+export default function KpiDashboard({ kpis, risks, findings }) {
   const labels = kpis.map(k => k.name);
   const values = kpis.map(k => k.value);
   const targets = kpis.map(k => k.target);
+
+  const highRisks = risks ? risks.filter(r => Number(r.L) * Number(r.I) >= 13).length : 0;
+  const totalRisks = risks ? risks.length : 0;
+  const openFindings = findings ? findings.filter(f => f.status !== "Closed").length : 0;
 
   const data = {
     labels,
@@ -92,6 +96,26 @@ export default function KpiDashboard({ kpis }) {
     <div className="card">
       <h2 className="h1">Performance Monitoring Dashboard</h2>
       <p className="muted">Track key performance indicators across your integrated management system. Green shows current performance, Red shows target goals.</p>
+
+      <div className="card" style={{background:"linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)", borderLeft:"4px solid #0284c7", marginTop:"16px", marginBottom:"20px", padding:"16px"}}>
+        <h3 style={{margin:"0 0 8px", fontSize:"14px", fontWeight:"700", color:"#0c4a6e"}}>
+          📊 Dynamic KPI Updates
+        </h3>
+        <p style={{margin:"0", fontSize:"13px", color:"#0c4a6e", lineHeight:"1.6"}}>
+          These KPIs update automatically based on your risk and finding data:
+        </p>
+        <div style={{display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:"12px", marginTop:"12px"}}>
+          <div style={{fontSize:"12px", color:"#0c4a6e"}}>
+            <strong>Risks:</strong> {totalRisks} total ({highRisks} high)
+          </div>
+          <div style={{fontSize:"12px", color:"#0c4a6e"}}>
+            <strong>Findings:</strong> {openFindings} open
+          </div>
+          <div style={{fontSize:"12px", color:"#0c4a6e"}}>
+            <strong>Updates:</strong> Real-time
+          </div>
+        </div>
+      </div>
 
       <div style={{ marginBottom: '24px', padding: '12px 0' }}>
         <Bar data={data} options={options} />

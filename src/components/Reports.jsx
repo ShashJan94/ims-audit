@@ -494,6 +494,243 @@ End of Report
           </table>
         </div>
       </div>
+
+      {/* Presentation-Ready Tables */}
+      <h3 style={{margin:"32px 0 16px", fontSize:"16px", fontWeight:"600", color:"#1e3a5f"}}>Detailed Reports for Presentation</h3>
+
+      {/* High Priority Risks Table */}
+      <div className="card" style={{padding:"20px", marginBottom:"20px"}}>
+        <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
+          <h4 style={{margin:"0", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>
+            🔴 High Priority Risks (Score ≥ 13)
+          </h4>
+          <span style={{fontSize:"12px", color:"#6b7280"}}>
+            {risks.filter(r => Number(r.L) * Number(r.I) >= 13).length} Critical Items
+          </span>
+        </div>
+        <table style={{fontSize:"12px"}}>
+          <thead>
+            <tr style={{background:"linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)"}}>
+              <th style={{padding:"10px", textAlign:"left", borderBottom:"2px solid #dc2626"}}>Risk ID</th>
+              <th style={{padding:"10px", textAlign:"left", borderBottom:"2px solid #dc2626"}}>Area</th>
+              <th style={{padding:"10px", textAlign:"left", borderBottom:"2px solid #dc2626"}}>Description</th>
+              <th style={{padding:"10px", textAlign:"center", borderBottom:"2px solid #dc2626"}}>L×I</th>
+              <th style={{padding:"10px", textAlign:"center", borderBottom:"2px solid #dc2626"}}>Score</th>
+              <th style={{padding:"10px", textAlign:"left", borderBottom:"2px solid #dc2626"}}>Owner</th>
+            </tr>
+          </thead>
+          <tbody>
+            {risks
+              .map(r => ({ ...r, score: Number(r.L) * Number(r.I) }))
+              .filter(r => r.score >= 13)
+              .sort((a, b) => b.score - a.score)
+              .map((r, idx) => (
+                <tr key={idx} style={{borderBottom:"1px solid #e5e7eb"}}>
+                  <td style={{padding:"10px", fontWeight:"600", color:"#dc2626"}}>{r.id}</td>
+                  <td style={{padding:"10px"}}>
+                    <span style={{
+                      padding:"4px 8px",
+                      borderRadius:"4px",
+                      fontSize:"11px",
+                      fontWeight:"600",
+                      background: r.area === "Quality" ? "#eff6ff" : 
+                                 r.area === "Environment" ? "#d1fae5" :
+                                 r.area === "OH&S" ? "#fef3c7" : "#e0e7ff",
+                      color: r.area === "Quality" ? "#1e40af" : 
+                            r.area === "Environment" ? "#065f46" :
+                            r.area === "OH&S" ? "#78350f" : "#5b21b6"
+                    }}>
+                      {r.area}
+                    </span>
+                  </td>
+                  <td style={{padding:"10px"}}>{r.description}</td>
+                  <td style={{padding:"10px", textAlign:"center", fontWeight:"600"}}>{r.L} × {r.I}</td>
+                  <td style={{padding:"10px", textAlign:"center"}}>
+                    <span style={{
+                      padding:"4px 10px",
+                      borderRadius:"6px",
+                      fontWeight:"700",
+                      background:"#dc2626",
+                      color:"white"
+                    }}>
+                      {r.score}
+                    </span>
+                  </td>
+                  <td style={{padding:"10px", fontSize:"11px"}}>{r.owner}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Risk Summary by Area Table */}
+      <div className="card" style={{padding:"20px", marginBottom:"20px"}}>
+        <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
+          <h4 style={{margin:"0", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>
+            📊 Risk Distribution by Management System Area
+          </h4>
+        </div>
+        <table style={{fontSize:"12px"}}>
+          <thead>
+            <tr style={{background:"linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)"}}>
+              <th style={{padding:"12px", textAlign:"left", borderBottom:"2px solid #2563eb"}}>Area</th>
+              <th style={{padding:"12px", textAlign:"center", borderBottom:"2px solid #2563eb"}}>Total Risks</th>
+              <th style={{padding:"12px", textAlign:"center", borderBottom:"2px solid #2563eb"}}>High (≥13)</th>
+              <th style={{padding:"12px", textAlign:"center", borderBottom:"2px solid #2563eb"}}>Medium (7-12)</th>
+              <th style={{padding:"12px", textAlign:"center", borderBottom:"2px solid #2563eb"}}>Low (1-6)</th>
+              <th style={{padding:"12px", textAlign:"center", borderBottom:"2px solid #2563eb"}}>Avg Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {["Quality", "Environment", "OH&S", "IMS"].map(area => {
+              const areaRisks = risks.filter(r => r.area === area).map(r => ({ ...r, score: Number(r.L) * Number(r.I) }));
+              const high = areaRisks.filter(r => r.score >= 13).length;
+              const medium = areaRisks.filter(r => r.score >= 7 && r.score < 13).length;
+              const low = areaRisks.filter(r => r.score < 7).length;
+              const avgScore = areaRisks.length > 0 
+                ? (areaRisks.reduce((sum, r) => sum + r.score, 0) / areaRisks.length).toFixed(1)
+                : "0.0";
+              
+              return (
+                <tr key={area} style={{borderBottom:"1px solid #e5e7eb"}}>
+                  <td style={{padding:"12px", fontWeight:"600", color:"#1e3a5f"}}>{area}</td>
+                  <td style={{padding:"12px", textAlign:"center", fontWeight:"600"}}>{areaRisks.length}</td>
+                  <td style={{padding:"12px", textAlign:"center", color:"#dc2626", fontWeight:"600"}}>{high}</td>
+                  <td style={{padding:"12px", textAlign:"center", color:"#f59e0b", fontWeight:"600"}}>{medium}</td>
+                  <td style={{padding:"12px", textAlign:"center", color:"#10b981", fontWeight:"600"}}>{low}</td>
+                  <td style={{padding:"12px", textAlign:"center", fontWeight:"700", fontSize:"13px"}}>{avgScore}</td>
+                </tr>
+              );
+            })}
+            <tr style={{background:"linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)", fontWeight:"700"}}>
+              <td style={{padding:"12px", borderTop:"2px solid #2563eb"}}>TOTAL</td>
+              <td style={{padding:"12px", textAlign:"center", borderTop:"2px solid #2563eb"}}>{risks.length}</td>
+              <td style={{padding:"12px", textAlign:"center", color:"#dc2626", borderTop:"2px solid #2563eb"}}>{riskStats.high}</td>
+              <td style={{padding:"12px", textAlign:"center", color:"#f59e0b", borderTop:"2px solid #2563eb"}}>{riskStats.medium}</td>
+              <td style={{padding:"12px", textAlign:"center", color:"#10b981", borderTop:"2px solid #2563eb"}}>{riskStats.low}</td>
+              <td style={{padding:"12px", textAlign:"center", borderTop:"2px solid #2563eb"}}>
+                {(risks.reduce((sum, r) => sum + (Number(r.L) * Number(r.I)), 0) / risks.length).toFixed(1)}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {/* Findings Detailed Table */}
+      <div className="card" style={{padding:"20px", marginBottom:"20px"}}>
+        <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
+          <h4 style={{margin:"0", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>
+            📋 Audit Findings Tracking
+          </h4>
+          <span style={{fontSize:"12px", color:"#6b7280"}}>
+            {findingStats.open} Open / {findingStats.total} Total
+          </span>
+        </div>
+        <table style={{fontSize:"12px"}}>
+          <thead>
+            <tr style={{background:"linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)"}}>
+              <th style={{padding:"10px", textAlign:"left", borderBottom:"2px solid #f59e0b"}}>Type</th>
+              <th style={{padding:"10px", textAlign:"left", borderBottom:"2px solid #f59e0b"}}>Description</th>
+              <th style={{padding:"10px", textAlign:"left", borderBottom:"2px solid #f59e0b"}}>Area</th>
+              <th style={{padding:"10px", textAlign:"center", borderBottom:"2px solid #f59e0b"}}>Status</th>
+              <th style={{padding:"10px", textAlign:"left", borderBottom:"2px solid #f59e0b"}}>Responsible</th>
+              <th style={{padding:"10px", textAlign:"left", borderBottom:"2px solid #f59e0b"}}>Due Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {findings.map((f, idx) => (
+              <tr key={idx} style={{borderBottom:"1px solid #e5e7eb"}}>
+                <td style={{padding:"10px"}}>
+                  <span style={{
+                    padding:"4px 8px",
+                    borderRadius:"4px",
+                    fontSize:"11px",
+                    fontWeight:"700",
+                    background: f.type === "NC" ? "#fee2e2" : f.type === "OBS" ? "#fef3c7" : "#dbeafe",
+                    color: f.type === "NC" ? "#dc2626" : f.type === "OBS" ? "#f59e0b" : "#2563eb"
+                  }}>
+                    {f.type}
+                  </span>
+                </td>
+                <td style={{padding:"10px"}}>{f.description}</td>
+                <td style={{padding:"10px", fontSize:"11px"}}>{f.area}</td>
+                <td style={{padding:"10px", textAlign:"center"}}>
+                  <span style={{
+                    padding:"4px 10px",
+                    borderRadius:"6px",
+                    fontSize:"11px",
+                    fontWeight:"600",
+                    background: f.status === "Closed" ? "#d1fae5" : 
+                               f.status === "In Progress" ? "#fef3c7" : "#fee2e2",
+                    color: f.status === "Closed" ? "#065f46" :
+                          f.status === "In Progress" ? "#78350f" : "#dc2626"
+                  }}>
+                    {f.status}
+                  </span>
+                </td>
+                <td style={{padding:"10px", fontSize:"11px"}}>{f.responsible}</td>
+                <td style={{padding:"10px", fontSize:"11px"}}>{f.dueDate}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* KPI Performance Table */}
+      <div className="card" style={{padding:"20px", marginBottom:"20px"}}>
+        <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
+          <h4 style={{margin:"0", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>
+            📈 Key Performance Indicators Summary
+          </h4>
+          <span style={{fontSize:"12px", color:"#6b7280"}}>
+            {kpiStats.onTarget}/{kpiStats.total} On Target ({kpiStats.avgPerformance}%)
+          </span>
+        </div>
+        <table style={{fontSize:"12px"}}>
+          <thead>
+            <tr style={{background:"linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)"}}>
+              <th style={{padding:"12px", textAlign:"left", borderBottom:"2px solid #8b5cf6"}}>KPI Name</th>
+              <th style={{padding:"12px", textAlign:"center", borderBottom:"2px solid #8b5cf6"}}>Current Value</th>
+              <th style={{padding:"12px", textAlign:"center", borderBottom:"2px solid #8b5cf6"}}>Target</th>
+              <th style={{padding:"12px", textAlign:"center", borderBottom:"2px solid #8b5cf6"}}>Performance</th>
+              <th style={{padding:"12px", textAlign:"center", borderBottom:"2px solid #8b5cf6"}}>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {kpis.map((k, idx) => {
+              const performance = k.target > 0 ? ((k.value / k.target) * 100).toFixed(0) : "N/A";
+              const isOnTrack = k.value >= k.target;
+              
+              return (
+                <tr key={idx} style={{borderBottom:"1px solid #e5e7eb"}}>
+                  <td style={{padding:"12px", fontWeight:"600", color:"#1e3a5f"}}>{k.name}</td>
+                  <td style={{padding:"12px", textAlign:"center", fontWeight:"700", fontSize:"13px", color:"#1b5e20"}}>
+                    {k.value}{k.unit}
+                  </td>
+                  <td style={{padding:"12px", textAlign:"center", fontWeight:"700", fontSize:"13px", color:"#d32f2f"}}>
+                    {k.target}{k.unit}
+                  </td>
+                  <td style={{padding:"12px", textAlign:"center", fontWeight:"600"}}>
+                    {performance !== "N/A" ? `${performance}%` : "N/A"}
+                  </td>
+                  <td style={{padding:"12px", textAlign:"center"}}>
+                    <span style={{
+                      padding:"4px 10px",
+                      borderRadius:"6px",
+                      fontSize:"11px",
+                      fontWeight:"700",
+                      background: isOnTrack ? "#d1fae5" : "#fee2e2",
+                      color: isOnTrack ? "#065f46" : "#dc2626"
+                    }}>
+                      {isOnTrack ? "✓ On Track" : "⚠ Below"}
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
