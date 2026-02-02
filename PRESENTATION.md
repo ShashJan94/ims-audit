@@ -177,6 +177,46 @@ This was built using React and Vite, modern web technologies."
 - Color-coded severity
 - Data persistence via localStorage
 
+##### **How to Add an Audit Risk** (Interactive Demo)
+
+Follow these steps during your presentation:
+
+1. **Scroll down** to the "Add Risk (Demo)" section in the Risks tab
+2. **Fill in the form fields**:
+   - **ID**: Enter a unique identifier (e.g., `R8`, `R9`)
+   - **Area**: Select from Quality, Environment, OH&S, or IMS
+   - **Risk Description**: Explain what the risk is (e.g., "Late payment processing")
+   - **Cause**: Why does this risk exist? (e.g., "Understaffed billing team")
+   - **Impact**: What's the consequence? (e.g., "Customer dissatisfaction")
+   - **Owner**: Who's responsible? (e.g., "Finance Manager")
+   - **Likelihood (1-5)**: Rate probability (1=Very unlikely, 5=Very likely)
+   - **Impact (1-5)**: Rate consequence (1=Minimal, 5=Severe)
+   - **Controls/Treatment**: What mitigates this risk? (e.g., "Implement automated billing system")
+
+3. **Click "Add Risk"** button
+4. **Observe the new risk** appearing in the table with:
+   - Calculated **Score** = Likelihood × Impact
+   - Color-coded badge: 🟢 Low (1-6), 🟡 Medium (7-12), 🔴 High (13-25)
+   - Risk level indicator
+
+**Example Risk to Add During Demo**:
+- **ID**: R8
+- **Area**: Quality
+- **Description**: Inadequate internal communication
+- **Cause**: Decentralized information sharing
+- **Impact**: Policy inconsistencies, training gaps
+- **Likelihood**: 3 (Possible)
+- **Impact**: 3 (Moderate)
+- **Score**: 9 (Medium Risk)
+- **Owner**: Communications Manager
+- **Controls**: Monthly team meetings, shared documentation system
+
+**Talking Points**:
+- "The system calculates risk priority automatically"
+- "Color coding helps identify high-risk areas requiring audit focus"
+- "This data-driven approach ensures audits are risk-based"
+- "Data persists in the browser, so your risk stays even after refresh"
+
 #### **Step 3: Audit Planning** (1.5 minutes)
 - Navigate to **"Audit Plan"** tab
 - Show scheduled audits
