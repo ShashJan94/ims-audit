@@ -11,7 +11,7 @@ export default function ExportJson({ state }) {
 
   return (
     <div className="card">
-      <h2 className="h1">📤 Export Audit Data</h2>
+      <h2 className="h1">Export Audit Data</h2>
       <p className="muted">
         Export all audit data as JSON. Perfect for reporting, archiving, or integration with external systems.
       </p>

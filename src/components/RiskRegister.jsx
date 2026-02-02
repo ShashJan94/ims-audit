@@ -23,14 +23,53 @@ export default function RiskRegister({ risks, setRisks }) {
 
   const removeRisk = (id) => setRisks(prev => prev.filter(r => r.id !== id));
 
+  const handleCSVUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target.result;
+      const lines = text.split('\n').filter(line => line.trim());
+      const headers = lines[0].split(',').map(h => h.trim());
+      
+      const newRisks = lines.slice(1).map(line => {
+        const values = line.split(',').map(v => v.trim());
+        const risk = {};
+        headers.forEach((header, index) => {
+          risk[header] = values[index];
+        });
+        risk.L = Number(risk.L);
+        risk.I = Number(risk.I);
+        return risk;
+      });
+      
+      setRisks(prev => [...prev, ...newRisks]);
+    };
+    reader.readAsText(file);
+    e.target.value = ''; // Reset file input
+  };
+
+  const downloadSampleCSV = () => {
+    const csvContent = `id,area,description,cause,impact,L,I,owner,controls
+R99,Quality,Sample Risk,Sample cause,Sample impact,3,3,Owner Name,Sample controls`;
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sample-risks.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="card">
-      <h2 className="h1">⚠️ Risk Register</h2>
+      <h2 className="h1">Risk Register</h2>
       <p className="muted">Identify and assess audit risks. Score = Likelihood (L) × Impact (I). Thresholds: 1–6 Low, 7–12 Medium, 13–25 High.</p>
 
       <hr />
 
-      <h3 style={{margin:"16px 0 12px", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>📊 Risk Assessment Scale</h3>
+      <h3 style={{margin:"16px 0 12px", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>Risk Assessment Scale</h3>
       <div style={{display:"grid", gridTemplateColumns:"repeat(2, 1fr)", gap:"12px", marginBottom:"20px"}}>
         <div className="card" style={{boxShadow:"0 2px 12px rgba(0,0,0,0.06)", borderLeft:"4px solid #3b82f6"}}>
           <b>Likelihood (L): 1–5 Scale</b>
@@ -46,7 +85,25 @@ export default function RiskRegister({ risks, setRisks }) {
         </div>
       </div>
 
-      <h3 style={{margin:"16px 0 12px", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>🎯 Current Assessed Risks</h3>
+      <div className="card" style={{background:"linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)", borderLeft:"4px solid #2563eb", marginBottom:"20px"}}>
+        <h3 style={{margin:"0 0 12px", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>Import Risks from CSV</h3>
+        <p className="muted" style={{marginBottom:"16px", fontSize:"13px"}}>
+          Upload a CSV file to bulk import risks. Download the sample template to see the required format.
+        </p>
+        <div style={{display:"flex", gap:"12px", alignItems:"center"}}>
+          <input 
+            type="file" 
+            accept=".csv" 
+            onChange={handleCSVUpload}
+            style={{padding:"8px", border:"2px solid #2563eb", borderRadius:"6px", fontSize:"13px", background:"white"}}
+          />
+          <button className="btn secondary" onClick={downloadSampleCSV} style={{whiteSpace:"nowrap"}}>
+            Download Sample CSV
+          </button>
+        </div>
+      </div>
+
+      <h3 style={{margin:"16px 0 12px", fontSize:"14px", fontWeight:"600", color:"#1e3a5f"}}>Current Assessed Risks</h3>
       <table style={{marginBottom:"24px"}}>
         <thead>
           <tr>

@@ -1,0 +1,6 @@
+id,area,description,cause,impact,L,I,owner,controls
+R1,Quality,Inconsistent service delivery,Non-standard ticket handling,Customer dissatisfaction; SLA breaches,3,4,Service Desk Lead,SOP + training + weekly QA sampling
+R2,Quality,Delayed incident resolution,Insufficient staffing during peaks,Penalties; customer churn,4,4,Operations Manager,Capacity planning + escalation rules + alerts
+R3,Environment,High electricity consumption,Inefficient devices; always-on equipment,Higher costs and emissions,3,3,EMS Coordinator,Energy baseline + monthly monitoring + power policies
+R5,OH&S,Ergonomic injuries (MSD risk),Poor workstation setup; long screen time,Sick leave; lower productivity,4,3,HR & H&S Rep,Ergonomics self-assessment + training + improvements
+R7,IMS,Document control failures,Outdated procedures used,Nonconformities; inconsistent operations,3,4,IMS Manager,Central repo + version control + annual review cycle

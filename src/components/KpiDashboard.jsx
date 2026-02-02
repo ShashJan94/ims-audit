@@ -90,7 +90,7 @@ export default function KpiDashboard({ kpis }) {
 
   return (
     <div className="card">
-      <h2 className="h1">🎯 Performance Monitoring (KPI Dashboard)</h2>
+      <h2 className="h1">Performance Monitoring Dashboard</h2>
       <p className="muted">Track key performance indicators across your integrated management system. Green shows current performance, Red shows target goals.</p>
 
       <div style={{ marginBottom: '24px', padding: '12px 0' }}>
@@ -107,8 +107,9 @@ export default function KpiDashboard({ kpis }) {
         </thead>
         <tbody>
           {kpis.map((k, idx) => {
-            const status = k.value >= k.target ? '✓ On Track' : '⚠ Below Target';
+            const status = k.value >= k.target ? 'On Track' : 'Below Target';
             const statusColor = k.value >= k.target ? '#1b5e20' : '#d32f2f';
+            const statusIcon = k.value >= k.target ? '●' : '▲';
             return (
               <tr key={idx}>
                 <td><b>{k.name}</b></td>
@@ -116,7 +117,7 @@ export default function KpiDashboard({ kpis }) {
                 <td>{k.baseline}{k.unit}</td>
                 <td><strong style={{color: '#d32f2f'}}>{k.target}{k.unit}</strong></td>
                 <td><strong style={{color: '#1b5e20'}}>{k.value}{k.unit}</strong></td>
-                <td><span style={{color: statusColor, fontWeight: '600'}}>{status}</span></td>
+                <td><span style={{color: statusColor, fontWeight: '600'}}>{statusIcon} {status}</span></td>
               </tr>
             );
           })}

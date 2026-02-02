@@ -1,7 +1,7 @@
 export default function AuditPlan({ auditPlan }) {
   return (
     <div className="card">
-      <h2 className="h1">📅 Internal Audit Plan</h2>
+      <h2 className="h1">Internal Audit Plan</h2>
       <p className="muted">
         Risk-based audit schedule. Coverage prioritizes high-risk processes and key ISO 9001, 14001, 45001 clauses.
       </p>
